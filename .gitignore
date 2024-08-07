@@ -33,3 +33,11 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+
+
+annotated/
+uploads/
+yolov8n.pt
+* .pyc
+__pycache__
