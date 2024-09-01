@@ -41,3 +41,5 @@ uploads/
 yolov8n.pt
 * .pyc
 __pycache__
+.venv/
+runs/

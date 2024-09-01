@@ -13,36 +13,32 @@ def PeopleCounter(filepath):
     frame = cv2.imread(filepath)
     
     # Get the dimensions of the image
-    height, width, channels = frame.shape
+    height, frame_width, channels = frame.shape
 
     # Run YOLOv8 inference on the frame
-    results = model(frame, stream=True)
+    results = model(frame, stream=False, classes=[0])
 
-    # Specify your confidence threshold
-    confidence_threshold = 0.6  # Adjust this value as needed
-
-    # Filter out low-confidence results
-    filtered_results = []
-    for result in results:
-        for box in result.boxes:
-            print('bojhukshksfkwax', box.conf)
-            if box.conf >= confidence_threshold:
-                filtered_results.append(result)
-                break
-
-    person_count = 0
-    for result in filtered_results:
-        # Count the number of persons detected
-        for box in result.boxes:
-            if box.cls == 0:  # Class ID for 'person' in YOLO models
-                person_count += 1
-        
-        # Visualize the results on the frame
-        annotated_frame = result.plot()
+    result = results[0]
+    person_count = result.__len__()
     
+    # Visualize the results on the frame
+    annotated_frame = result.plot()
+
+    # cv2.imshow('xyz', annotated_frame)
+    # cv2.waitKey(0)
+
+    # Added text to the annotated_frame
+    cv2.putText(annotated_frame, f"Detected {person_count} person(s) in the room",(frame_width//2 -60, 30), cv2.FONT_HERSHEY_SIMPLEX,0.5, (0, 255, 0), 2)
+
     file_name = filepath.split('/')[-1]
     # Save the annotated frame
     annotated_filepath = os.path.join(UPLOAD_DIRECTORY, file_name)
     cv2.imwrite(annotated_filepath, annotated_frame)
 
     return person_count, annotated_filepath
+
+if __name__ == "__main__":
+    filePath = 'uploads/_AFS9882.JPG'
+    person_count, annotated_filepath = PeopleCounter(filePath);
+    print(person_count)
+    print(annotated_filepath)
